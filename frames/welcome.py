@@ -1,4 +1,5 @@
-from UI.widgets import Label
+from UI.widgets import Label, Button
+
 from .page import Page
 
 
@@ -7,3 +8,5 @@ class WelcomePage(Page):
         super().__init__(parent, controller)
         label = Label(self, text="Привіт Іра")
         label.pack()
+        btn = Button(text="Увійти")
+        btn.pack(pady=10)

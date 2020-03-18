@@ -12,8 +12,8 @@ class Application(Tk):
         super().__init__(*args, **kwargs)
         self.iconbitmap(ICON_PATH)
         self.title(TITLE)
-        self.credentials = Credentials()
-        self.gc = gspread.authorize(self.credentials)
+        self._credentials = None
+        self._gc = None
 
         self.container = Frame(self)
         self.container.pack(side=TOP, fill=BOTH, expand=True)
@@ -24,6 +24,18 @@ class Application(Tk):
 
         self.fill_frames()
         self.show_page(START_PAGE)
+
+    @property
+    def credentials(self):
+        if not self._credentials:
+            self._credentials = Credentials()
+        return self._credentials
+
+    @property
+    def gc(self):
+        if not self._gc:
+            self._gc = gspread.authorize(self.credentials)
+        return self._gc
 
     def fill_frames(self):
         for F in FRAMES:
