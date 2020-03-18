@@ -3,7 +3,7 @@ from tkinter import Tk, Frame, BOTH, TOP
 import gspread
 
 from config import TITLE, ICON_PATH
-from frames import FRAMES, START_PAGE
+import frames
 from modules.authentication import Credentials
 
 
@@ -23,7 +23,7 @@ class Application(Tk):
         self.frames = dict()
 
         self.fill_frames()
-        self.show_page(START_PAGE)
+        self.show_page(frames.START_PAGE)
 
     @property
     def credentials(self):
@@ -38,11 +38,13 @@ class Application(Tk):
         return self._gc
 
     def fill_frames(self):
-        for F in FRAMES:
+        for F in frames.FRAMES:
             frame = F(self.container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
 
     def show_page(self, page):
+        if type(page) == str:
+            page = getattr(frames, page)
         frame = self.frames[page]
         frame.tkraise()

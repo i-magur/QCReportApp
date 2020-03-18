@@ -8,5 +8,5 @@ class WelcomePage(Page):
         super().__init__(parent, controller)
         label = Label(self, text="Привіт Іра")
         label.pack()
-        btn = Button(text="Увійти")
+        btn = Button(self, text="Увійти", command=lambda: controller.show_page("HomePage"))
         btn.pack(pady=10)
