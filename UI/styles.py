@@ -1,0 +1,1 @@
+FONT = ("Times New Roman", 12)
