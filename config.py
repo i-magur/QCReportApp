@@ -21,3 +21,5 @@ ICON_PATH = "icon.ico"
 
 TITLE = "QC Report App"
 
+SHEET_NAME = ''
+

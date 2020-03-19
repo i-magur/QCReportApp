@@ -1,4 +1,4 @@
-from UI.widgets import Label, Button
+from UI.widgets import Label, Button, Frame
 
 from .page import Page
 
@@ -6,7 +6,10 @@ from .page import Page
 class WelcomePage(Page):
     def __init__(self, parent, controller):
         super().__init__(parent, controller)
-        label = Label(self, text="Привіт Іра")
-        label.pack()
-        btn = Button(self, text="Увійти", command=lambda: controller.show_page("HomePage"))
-        btn.pack(pady=10)
+        frame1 = Frame(self)
+        frame1.pack()
+        Label(frame1, text="Привіт Іра").pack()
+
+        frame2 = Frame(self)
+        frame2.pack()
+        Button(frame2, text="Увійти", command=lambda: controller.show_page("HomePage")).pack()
