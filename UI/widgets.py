@@ -28,3 +28,7 @@ class Frame(ttk.Frame):
 
 class Select(ttk.Combobox):
     pass
+
+
+class Treeview(ttk.Treeview):
+    pass

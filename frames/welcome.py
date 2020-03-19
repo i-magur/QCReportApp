@@ -1,3 +1,4 @@
+import sys
 from tkinter import LEFT
 
 from UI.widgets import Label, Button, Frame
@@ -15,4 +16,4 @@ class WelcomePage(Page):
         frame2 = Frame(self)
         frame2.pack()
         Button(frame2, text="Увійти", command=lambda: controller.show_page("HomePage")).pack(side=LEFT, padx=10)
-        Button(frame2, text="Я не Іра!!!", command=quit).pack(side=LEFT)
+        Button(frame2, text="Я не Іра!!!", command=sys.exit).pack(side=LEFT)

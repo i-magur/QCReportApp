@@ -1,4 +1,3 @@
-import os
 import json
 
 FILE_CONFIG = dict()
@@ -53,4 +52,4 @@ ICON_PATH = "icon.ico"
 
 TITLE = "QC Report App"
 
-BASE_SHEET = get_value("BASE_SHEET")
+BASE_SHEET = get_value("BASE_SHEET", "")

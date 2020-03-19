@@ -1,4 +1,4 @@
-from tkinter import Tk, Frame, BOTH, TOP
+from tkinter import Tk, Frame, BOTH, TOP, messagebox
 
 import gspread
 from gspread import Client
@@ -16,6 +16,7 @@ class Application(Tk):
         self.title(self.config.TITLE)
         self._credentials = None
         self._gc = None
+        self.loaded_data = None
 
         self.container = Frame(self)
         self.container.pack(side=TOP, fill=BOTH, expand=True)
@@ -61,10 +62,10 @@ class Application(Tk):
 
     def load_data(self):
         if not self.get_sheet("BASE_SHEET"):
-            raise Exception("error")
-
-        table = self.gc.open(self.get_sheet("BASE_SHEET"))
-        ws = table.sheet1
-        print(ws.get_all_values())
-        for row in ws.get_all_values():
-            print(row)
+            messagebox.showerror(
+                "Не вибрана основна таблиця",
+                "Будьласка вибери основну таблицю"
+            )
+            return None
+        self.loaded_data = self.gc.open(self.get_sheet("BASE_SHEET")).sheet1
+        self.show_page(frames.LoadedDataPage)

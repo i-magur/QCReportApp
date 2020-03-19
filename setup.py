@@ -17,7 +17,7 @@ executables = [
 
 setup(
     name='QcReportApp',
-    version='1.0',
+    version='1.2',
     description='QC Report helper application',
     options=dict(build_exe=buildOptions),
     executables=executables
