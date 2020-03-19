@@ -2,9 +2,9 @@ from tkinter import Tk, Frame, BOTH, TOP
 
 import gspread
 
-from src.config import TITLE, ICON_PATH
-from src import frames
-from src.modules.authentication import Credentials
+from config import TITLE, ICON_PATH
+import frames
+from modules.authentication import Credentials
 
 
 class Application(Tk):

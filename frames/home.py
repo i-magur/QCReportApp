@@ -1,5 +1,5 @@
-from src.UI.widgets import Label
-from src.frames.page import Page
+from UI.widgets import Label
+from frames.page import Page
 
 
 class HomePage(Page):
