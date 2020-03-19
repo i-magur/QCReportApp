@@ -1,4 +1,4 @@
-from UI.widgets import Label, Button
+from src.UI.widgets import Label, Button
 
 from .page import Page
 

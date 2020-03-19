@@ -4,7 +4,7 @@ import pickle
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 
-from config import TOKEN_PATH, SCOPES
+from src.config import TOKEN_PATH, SCOPES
 
 
 class Credentials:
