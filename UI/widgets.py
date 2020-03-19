@@ -25,5 +25,6 @@ class Frame(ttk.Frame):
     def pack(self, *args, **kwargs):
         super(Frame, self).pack(*args, **{"pady": 10, "padx": 10, **kwargs})
 
+
 class Select(ttk.Combobox):
     pass

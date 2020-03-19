@@ -1,8 +1,9 @@
 from tkinter import Tk, Frame, BOTH, TOP
 
 import gspread
+from gspread import Client
 
-from config import TITLE, ICON_PATH
+import config
 import frames
 from modules.authentication import Credentials
 
@@ -10,8 +11,9 @@ from modules.authentication import Credentials
 class Application(Tk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.iconbitmap(ICON_PATH)
-        self.title(TITLE)
+        self.config = config
+        self.iconbitmap(self.config.ICON_PATH)
+        self.title(self.config.TITLE)
         self._credentials = None
         self._gc = None
 
@@ -32,7 +34,7 @@ class Application(Tk):
         return self._credentials
 
     @property
-    def gc(self):
+    def gc(self) -> Client:
         if not self._gc:
             self._gc = gspread.authorize(self.credentials)
         return self._gc
@@ -48,3 +50,12 @@ class Application(Tk):
             page = getattr(frames, page)
         frame = self.frames[page]
         frame.tkraise()
+
+    def save_sheet(self, name, value, cb=None):
+        self.config.set_value(name, value)
+        setattr(self.config, name, value)
+        callable(cb) and cb()
+
+    def get_sheet(self, name):
+        print(self.config, getattr(self.config, name), name)
+        return getattr(self.config, name, None)
