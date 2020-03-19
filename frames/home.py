@@ -23,6 +23,11 @@ class HomePage(Page):
         self.sheet_input.pack(side=LEFT, padx=10)
         self.update_btn.pack(side=LEFT)
 
+        frame3 = Frame(self)
+        frame3.pack()
+        load_data = Button(frame3, text="Завантажити дані", command=self.controller.load_data)
+        load_data.pack()
+
     def update_widget_name(self):
         self.sheet_name.set(self.controller.get_sheet("BASE_SHEET"))
 

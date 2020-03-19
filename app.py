@@ -57,5 +57,14 @@ class Application(Tk):
         callable(cb) and cb()
 
     def get_sheet(self, name):
-        print(self.config, getattr(self.config, name), name)
         return getattr(self.config, name, None)
+
+    def load_data(self):
+        if not self.get_sheet("BASE_SHEET"):
+            raise Exception("error")
+
+        table = self.gc.open(self.get_sheet("BASE_SHEET"))
+        ws = table.sheet1
+        print(ws.get_all_values())
+        for row in ws.get_all_values():
+            print(row)
