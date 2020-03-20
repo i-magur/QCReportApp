@@ -1,5 +1,6 @@
 import re
 
+DEFAULT_ORDER = ["Iryna", "Oleg", "Mariia",	"Lilia", "Uliana", "Anna"]
 USER = 13
 WORDCOUNT = 8
 
@@ -10,8 +11,7 @@ def get_clean_data(raw_data):
     return [row for row in raw_data[1:] if row[0]]
 
 
-def collect_users_wh(raw_data):
-    clean_data = get_clean_data(raw_data)
+def collect_users_wh(clean_data):
     if not clean_data:
         return None
     data = dict()
@@ -34,4 +34,11 @@ def collect_users_wh(raw_data):
                 data[name]["tasks"] += 1
             except KeyError:
                 data[name] = {"words": split_words, "tasks": 1}
-    return sorted([(k, v["words"], v["tasks"]) for k, v in data.items()], key=lambda i: i[0])
+    return [
+        (name, data.get(name, {"words": 0})["words"], data.get(name, {"tasks": 0})["tasks"])
+        for name in DEFAULT_ORDER
+    ]
+
+
+def collect_faults(cd):
+    pass

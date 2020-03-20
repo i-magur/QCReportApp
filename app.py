@@ -6,6 +6,7 @@ from gspread import Client
 import config
 import frames
 from modules.authentication import Credentials
+from utils.utils import collect_users_wh, get_clean_data
 
 
 class Application(Tk):
@@ -17,6 +18,9 @@ class Application(Tk):
         self._credentials = None
         self._gc = None
         self.loaded_data = None
+        self.clean_data = None
+        self.users_wh = None
+        self.wh_headings = ["QC", "Words", "Tasks"]
 
         self.container = Frame(self)
         self.container.pack(side=TOP, fill=BOTH, expand=True)
@@ -60,6 +64,15 @@ class Application(Tk):
     def get_sheet(self, name):
         return getattr(self.config, name, None)
 
+    def set_users_wh(self):
+        try:
+            self.users_wh = collect_users_wh(self.clean_data)
+        except IndexError:
+            messagebox.showerror("Помилка з данними", "Можливо вибрана не та таблиця")
+
+    def set_clean(self):
+        self.clean_data = get_clean_data(self.loaded_data.get_all_values())
+
     def load_data(self):
         if not self.get_sheet("BASE_SHEET"):
             messagebox.showerror(
@@ -67,5 +80,9 @@ class Application(Tk):
                 "Будьласка вибери основну таблицю"
             )
             return None
+
         self.loaded_data = self.gc.open(self.get_sheet("BASE_SHEET")).sheet1
+        self.set_clean()
+        self.set_users_wh()
+
         self.show_page(frames.LoadedDataPage)
