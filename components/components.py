@@ -96,7 +96,7 @@ class BaseTable(BaseComponent):
         pd = self.prepare_data()
         if len(pd) == 1:
             Cell(frm, "Дата").grid(row=0, column=0)
-            Cell(frm, date.today()).grid(row=1, column=0)
+            Cell(frm, self.format_date).grid(row=1, column=0)
 
         for idx, name in enumerate(self.labels, 1):
             Cell(frm, name).grid(row=0, column=idx)

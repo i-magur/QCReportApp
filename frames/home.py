@@ -1,3 +1,4 @@
+from datetime import date
 from tkinter import LEFT, DISABLED, Toplevel, NORMAL, StringVar
 
 from UI.widgets import Label, Button, Frame, Entry, Select
@@ -10,9 +11,20 @@ class HomePage(Page):
         self.window = None
         self.sheet_name = StringVar(value=self.controller.get_sheet("BASE_SHEET"))
         frame1 = Frame(self)
-        label = Label(frame1, text="Таблиця з данними")
+        label = Label(frame1, text="Вибрана таблиця і день")
 
         frame2 = Frame(self)
+        self.day_input = Select(
+            frame2,
+            state="readonly",
+            width=3,
+            values=list(range(1, date.today().day + 1))
+        )
+        self.day_input.set(self.controller.date.day)
+        self.day_input.bind(
+            '<<ComboboxSelected>>',
+            lambda e: self.controller.save_date(self.day_input.get())
+        )
         self.sheet_input = Entry(frame2, textvar=self.sheet_name, state=DISABLED)
         self.update_widget_name()
         self.update_btn = Button(frame2, text="Змінити", command=self.select_sheet)
@@ -20,6 +32,7 @@ class HomePage(Page):
         frame1.pack()
         label.pack()
         frame2.pack()
+        self.day_input.pack(side=LEFT)
         self.sheet_input.pack(side=LEFT, padx=10)
         self.update_btn.pack(side=LEFT)
 

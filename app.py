@@ -1,7 +1,8 @@
+from datetime import date
 from tkinter import Tk, Frame, BOTH, TOP, messagebox
 
 import gspread
-from gspread import Client
+from gspread import Client, WorksheetNotFound
 
 import config
 import frames
@@ -15,9 +16,11 @@ class Application(Tk):
         self.config = config
         self.iconbitmap(self.config.ICON_PATH)
         self.title(self.config.TITLE)
+        self.sheet = None
         self._credentials = None
         self._gc = None
         self.loaded_data = None
+        self.date = date.today()
         self.clean_data = None
         self.users_wh = None
         self.wh_headings = ["QC", "Words", "Tasks"]
@@ -61,8 +64,17 @@ class Application(Tk):
         setattr(self.config, name, value)
         callable(cb) and cb()
 
+    def save_date(self, day):
+        self.date = date.today().replace(day=int(day))
+
+    def format_date(self):
+        return self.date.strftime("%m/%d/%y")
+
     def get_sheet(self, name):
         return getattr(self.config, name, None)
+
+    def get_worksheet(self):
+        return str(self.date.day)
 
     def set_users_wh(self):
         try:
@@ -73,6 +85,10 @@ class Application(Tk):
     def set_clean(self):
         self.clean_data = get_clean_data(self.loaded_data.get_all_values())
 
+    def worksheet_not_found(self):
+        messagebox.showerror("Не знайдено",
+                             f"Вибрана таблиця не має вкладки {self.date.day}")
+
     def load_data(self):
         if not self.get_sheet("BASE_SHEET"):
             messagebox.showerror(
@@ -81,7 +97,12 @@ class Application(Tk):
             )
             return None
 
-        self.loaded_data = self.gc.open(self.get_sheet("BASE_SHEET")).sheet1
+        self.sheet = self.gc.open(self.get_sheet("BASE_SHEET"))
+
+        try:
+            self.loaded_data = self.sheet.worksheet(self.get_worksheet())
+        except WorksheetNotFound:
+            return self.worksheet_not_found()
         self.set_clean()
         self.set_users_wh()
 
