@@ -1,6 +1,7 @@
 import re
 
 DEFAULT_ORDER = ["Iryna", "Oleg", "Mariia",	"Lilia", "Uliana", "Anna"]
+WORD_EXP_HEADERS = ["Слова", "Таски", "Очікування"]
 USER = 13
 WORDCOUNT = 8
 
@@ -42,3 +43,11 @@ def collect_users_wh(clean_data):
 
 def collect_faults(cd):
     pass
+
+
+def bind_tree(widget, event, callback, add=''):
+    """Binds an event to a widget and all its descendants."""
+
+    widget.bind(event, callback, add)
+    for child in widget.children.values():
+        bind_tree(child, event, callback, add)

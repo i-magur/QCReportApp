@@ -1,7 +1,8 @@
 from UI.widgets import Label, Button, Frame
-from components.components import Table
+from components.components import Table, TotalRow, InfoRow
 from tkinter import messagebox, LEFT
 from frames.page import Page
+from utils.utils import DEFAULT_ORDER, WORD_EXP_HEADERS
 
 
 class LoadedDataPage(Page):
@@ -10,9 +11,15 @@ class LoadedDataPage(Page):
 
         Label(self, text="Дані по QC")
         self.table = Table(master=self, controller=self.controller, data_attr="users_wh", headings_attr="wh_headings")
-        # self.table.bind('<Mouse-1>', lambda e: print('click', e))
-
         self.table.pack()
+
+        self.total = TotalRow(self, self.controller,
+                              data_attr="users_wh", labels=DEFAULT_ORDER)
+        self.total.pack()
+
+        self.info = InfoRow(self, self.controller,
+                            data_attr="clean_data", labels=WORD_EXP_HEADERS)
+        self.info.pack()
 
         btn_frame = Frame(self)
         btn_frame.pack()
@@ -29,3 +36,5 @@ class LoadedDataPage(Page):
     def tkraise(self, aboveThis=None):
         super(LoadedDataPage, self).tkraise(aboveThis)
         self.table.render()
+        self.total.render()
+        self.info.render()
