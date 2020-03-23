@@ -1,6 +1,6 @@
 from UI.widgets import Label, Button, Frame
-from components.components import TotalRow, InfoRow, GeneralInfo
-from tkinter import messagebox, LEFT
+from components.components import WordCountTable, InfoRow, GeneralInfo, ProjectsCountTable
+from tkinter import messagebox, LEFT, BOTH
 from frames.page import Page
 from utils.utils import DEFAULT_ORDER
 
@@ -18,13 +18,14 @@ class LoadedDataPage(Page):
 
         frm_right = Frame(self)
         frm_right.grid(row=0, column=1)
-
-        self.total = TotalRow(frm_right, self.controller,
-                              data_attr="users_wh", labels=DEFAULT_ORDER)
-        self.total.pack()
-
+        self.total = WordCountTable(frm_right, self.controller,
+                                    data_attr="users_wh", labels=DEFAULT_ORDER)
+        self.projects = ProjectsCountTable(frm_right, self.controller,
+                                           data_attr="users_wh", labels=DEFAULT_ORDER)
         self.info = InfoRow(frm_right, self.controller,
                             data_attr="clean_data", labels=self.controller.wh_headings)
+        self.total.pack()
+        self.projects.pack()
         self.info.pack()
 
         btn_frame = Frame(self)
@@ -39,8 +40,11 @@ class LoadedDataPage(Page):
     def fill_all(self):
         messagebox.showinfo("Скоро буде!", "Рано ще. Там багато умов :)")
 
+    @property
+    def frames(self):
+        return [self.table, self.total, self.projects, self.info]
+
     def tkraise(self, aboveThis=None):
         super(LoadedDataPage, self).tkraise(aboveThis)
-        self.table.render()
-        self.total.render()
-        self.info.render()
+        for f in self.frames:
+            f.render()

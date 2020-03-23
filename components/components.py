@@ -107,12 +107,20 @@ class BaseTable(BaseComponent):
         bind_tree(frm, "<Button-1>", self.copy_text)
 
 
-class TotalRow(BaseTable):
+class WordCountTable(BaseTable):
     def get_content(self):
         return "\t".join(map(str, self.prepare_data()[0]))
 
     def prepare_data(self):
         return [[row[1] for row in self.data]]
+
+
+class ProjectsCountTable(BaseTable):
+    def get_content(self):
+        return "\t".join(map(str, self.prepare_data()[0]))
+
+    def prepare_data(self):
+        return [[row[2] for row in self.data]]
 
 
 class InfoRow(BaseTable):
