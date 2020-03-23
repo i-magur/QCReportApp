@@ -1,5 +1,5 @@
 from components.base import BaseTable
-from utils.utils import WORDCOUNT, FAULT_IDX, FAULT_INDEXES
+from utils.utils import WORDCOUNT, FAULT_IDX, FAULT_INDEXES, HAND_OFF_IDX, HAND_OFF_INDEXES
 
 
 # class Table(BaseComponent):
@@ -82,3 +82,11 @@ class FailuresTable(BaseTable):
                 data.append([row[idx] for idx in FAULT_INDEXES])
         return data
 
+
+class HandOffTable(BaseTable):
+    def prepare_data(self):
+        data = []
+        for row in self.data:
+            if row[HAND_OFF_IDX]:
+                data.append([row[idx] for idx in HAND_OFF_INDEXES])
+        return data

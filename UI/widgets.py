@@ -23,7 +23,14 @@ class Entry(ttk.Entry):
 
 class Frame(ttk.Frame):
     def pack(self, *args, **kwargs):
-        super(Frame, self).pack(*args, **{"pady": 10, "padx": 10, **kwargs})
+        kwargs["padx"] = kwargs.get("padx", 10)
+        kwargs["pady"] = kwargs.get("pady", 10)
+        super(Frame, self).pack(*args, **kwargs)
+
+
+class FrameSmall(ttk.Frame):
+    def pack(self, *args, **kwargs):
+        super(FrameSmall, self).pack(*args, **{"pady": 5, "padx": 5, **kwargs})
 
 
 class Select(ttk.Combobox):

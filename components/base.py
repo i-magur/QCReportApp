@@ -74,6 +74,9 @@ class BaseTable(BaseComponent):
         self.labels = labels or []
         super().__init__(*args, **kwargs)
 
+    def pack(self, *args, **kwargs):
+        super().pack(*args, padx=5, pady=1, **kwargs)
+
     def copy_text(self, e):
         if not self.data:
             return None
@@ -100,7 +103,7 @@ class BaseTable(BaseComponent):
         pd = self.prepare_data()
 
         frm = Frame(self.frame)
-        frm.pack()
+        frm.pack(padx=0, pady=0)
         frm.grid_rowconfigure(0, weight=1)
         frm.grid_columnconfigure(0, weight=1)
         if not pd:
@@ -109,7 +112,8 @@ class BaseTable(BaseComponent):
 
         if self.prepend_date:
             Cell(frm, "Date").grid(row=0, column=0)
-            Cell(frm, self.format_date).grid(row=1, column=0)
+            for ridx in range(1, len(pd)+1):
+                Cell(frm, self.format_date).grid(row=ridx, column=0)
 
         for idx, name in enumerate(self.labels, 1):
             Cell(frm, name).grid(row=0, column=idx)
