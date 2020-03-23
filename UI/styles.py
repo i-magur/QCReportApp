@@ -1,2 +1,2 @@
 FONT = ("Arial", 12)
-TABLE_FONT = ("Arial", 7)
+TABLE_FONT = ("Arial", 8)
