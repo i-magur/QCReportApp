@@ -58,9 +58,13 @@ class BaseComponent(Frame):
 
 
 class Cell(Frame):
-    def __init__(self, master, label, **kw):
-        super().__init__(master, style="Cell.TFrame", **kw)
-        lbl = Label(self, text=label, font=TABLE_FONT)
+    def __init__(self, master, label, thead=False, **kw):
+        super().__init__(master,
+                         style=f"{'H' if thead else ''}Cell.TFrame",
+                         **kw)
+        lbl = Label(self, text=label,
+                    style=f"{'H' if thead else ''}Cell.TLabel",
+                    font=TABLE_FONT)
         self.rowconfigure((0, 2), weight=1)
         self.columnconfigure((0, 2), weight=1)
         lbl.grid(row=1, column=1)
@@ -76,7 +80,7 @@ class BaseTable(BaseComponent):
         super().__init__(*args, **kwargs)
 
     def pack(self, *args, **kwargs):
-        super().pack(*args, padx=5, pady=1, **kwargs)
+        super().pack(*args, padx=0, pady=0, **kwargs)
 
     def copy_text(self, e):
         if not self.data:
@@ -112,12 +116,12 @@ class BaseTable(BaseComponent):
             return None
 
         if self.prepend_date:
-            Cell(frm, "Date").grid(row=0, column=0)
+            Cell(frm, "Date", thead=True).grid(row=0, column=0)
             for ridx in range(1, len(pd)+1):
                 Cell(frm, self.format_date).grid(row=ridx, column=0)
 
         for idx, name in enumerate(self.labels, 1):
-            Cell(frm, name).grid(row=0, column=idx)
+            Cell(frm, name, thead=True).grid(row=0, column=idx)
         for ridx, row in enumerate(pd, 1):
             for cidx, col in enumerate(row, 1):
                 Cell(frm, col).grid(row=ridx, column=cidx)

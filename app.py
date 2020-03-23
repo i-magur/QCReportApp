@@ -6,6 +6,7 @@ from gspread import Client, WorksheetNotFound
 
 import config
 import frames
+from UI.styles import STYLES
 from modules.authentication import Credentials
 from utils.utils import collect_users_wh, get_clean_data
 
@@ -112,11 +113,8 @@ class Application(Tk):
         self.show_page(frames.LoadedDataPage)
 
     def apply_styles(self):
-        self.style.configure(
-            "Cell.TFrame",
-            borderwidth=1,
-            padding=15,
-            bordercolor="black",
-            relief="solid"
-        )
-        print(self.style.layout("Cell.TFrame"))
+        for name, style in STYLES.items():
+            self.style.configure(
+                name,
+                **style
+            )
