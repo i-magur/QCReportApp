@@ -1,4 +1,21 @@
-from tkinter.ttk import Frame
+from tkinter import messagebox, GROOVE
+
+from UI.styles import TABLE_FONT
+from UI.widgets import Label, Frame
+from utils.utils import bind_tree
+
+
+def copy_text(comp, content):
+    comp.clipboard_clear()
+    comp.clipboard_append(content)
+    comp.update()
+
+    messagebox.showinfo(
+        "Скопійовано",
+        ("Текст скопійовано\n"
+         "Тепер можеш вставити в таблицю\n\n"
+         "%s" % content.replace('\t', ', '))
+    )
 
 
 class BaseComponent(Frame):
@@ -37,3 +54,67 @@ class BaseComponent(Frame):
 
     def initialize(self):
         pass
+
+
+class Cell(Frame):
+    def __init__(self, master, label, **kw):
+        super().__init__(master, relief=GROOVE, borderwidth=1, **kw)
+        lbl = Label(self, text=label, font=TABLE_FONT)
+        self.rowconfigure((0, 2), weight=1)
+        self.columnconfigure((0, 2), weight=1)
+        lbl.grid(row=1, column=1)
+
+    def grid(self, **kwargs):
+        super(Cell, self).grid(ipadx=5, ipady=5, sticky="nsew", **kwargs)
+
+
+class BaseTable(BaseComponent):
+    def __init__(self, *args, labels=None, prepend_date=False, **kwargs):
+        self.prepend_date = prepend_date
+        self.labels = labels or []
+        super().__init__(*args, **kwargs)
+
+    def copy_text(self, e):
+        if not self.data:
+            return None
+        copy_text(self, self.get_content())
+
+    def add_date(self, row):
+        return [self.format_date] + row
+
+    def get_content(self):
+        if self.prepend_date:
+            return "\n".join(
+                ["\t".join(
+                    [str(col) for col in self.add_date(row)]
+                ) for row in self.prepare_data()]
+            )
+        return "\n".join(["\t".join([str(col) for col in row]) for row in self.prepare_data()])
+
+    def prepare_data(self):
+        return []
+
+    def initialize(self):
+        if not self.data:
+            return None
+        pd = self.prepare_data()
+
+        frm = Frame(self.frame)
+        frm.pack()
+        frm.grid_rowconfigure(0, weight=1)
+        frm.grid_columnconfigure(0, weight=1)
+        if not pd:
+            # TODO: Pack blank data
+            return None
+
+        if self.prepend_date:
+            Cell(frm, "Date").grid(row=0, column=0)
+            Cell(frm, self.format_date).grid(row=1, column=0)
+
+        for idx, name in enumerate(self.labels, 1):
+            Cell(frm, name).grid(row=0, column=idx)
+        for ridx, row in enumerate(pd, 1):
+            for cidx, col in enumerate(row, 1):
+                Cell(frm, col).grid(row=ridx, column=cidx)
+
+        bind_tree(frm, "<Button-1>", self.copy_text)

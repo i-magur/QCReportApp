@@ -5,7 +5,7 @@ from .styles import FONT
 
 class Label(ttk.Label):
     def __init__(self, *args, **kwargs):
-        super().__init__(font=FONT, *args, **kwargs)
+        super().__init__(*args, **{"font": FONT, **kwargs})
 
 
 class Button(ttk.Button):

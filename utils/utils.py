@@ -1,6 +1,30 @@
 import re
 
-DEFAULT_ORDER = ["Iryna", "Oleg", "Mariia",	"Lilia", "Uliana", "Anna"]
+DEFAULT_ORDER = ["Iryna", "Oleg", "Mariia", "Lilia", "Uliana", "Anna"]
+DEFAULT_LABELS = [
+    "N°Commande",
+    "N°Devis",
+    "Client",
+    "Dossier Variable",
+    "Chef de Projet",
+    "Langue Source",
+    "Langue Cible",
+    "Prestation",
+    "UnitesFourn",
+    "Début",
+    "Date limite fournisseur",
+    "Actual task handoff time",
+    "Actual delivery time",
+    "Proofreader",
+    "devabit QC comments",
+    "Time spent on package opening"
+]
+
+FAULT_INDEXES = list(range(11)) + [14]
+FAULT_IDX = 13
+FAULT_LABELS = (DEFAULT_LABELS[idx] for idx in FAULT_INDEXES)
+
+
 USER = 13
 WORDCOUNT = 8
 
@@ -23,7 +47,7 @@ def collect_users_wh(clean_data):
             if (idx := name.find('(')) != -1:
                 r_name = name
                 name = r_name[:idx].strip()
-                split_words = r_name[idx+1:-1].strip()
+                split_words = r_name[idx + 1:-1].strip()
                 split_words = split_words.replace(',', '').replace('.', '').replace(' ', '')
                 split_words = int(split_words)
             else:
