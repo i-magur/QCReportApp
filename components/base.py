@@ -1,4 +1,5 @@
 from tkinter import messagebox, GROOVE
+from tkinter.ttk import Style
 
 from UI.styles import TABLE_FONT
 from UI.widgets import Label, Frame
@@ -58,14 +59,14 @@ class BaseComponent(Frame):
 
 class Cell(Frame):
     def __init__(self, master, label, **kw):
-        super().__init__(master, relief=GROOVE, borderwidth=1, **kw)
+        super().__init__(master, style="Cell.TFrame", **kw)
         lbl = Label(self, text=label, font=TABLE_FONT)
         self.rowconfigure((0, 2), weight=1)
         self.columnconfigure((0, 2), weight=1)
         lbl.grid(row=1, column=1)
 
     def grid(self, **kwargs):
-        super(Cell, self).grid(ipadx=5, ipady=5, sticky="nsew", **kwargs)
+        super(Cell, self).grid(ipadx=5, ipady=2, sticky="nsew", **kwargs)
 
 
 class BaseTable(BaseComponent):

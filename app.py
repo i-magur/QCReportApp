@@ -1,5 +1,5 @@
 from datetime import date
-from tkinter import Tk, Frame, BOTH, TOP, messagebox
+from tkinter import Tk, Frame, BOTH, TOP, messagebox, ttk
 
 import gspread
 from gspread import Client, WorksheetNotFound
@@ -34,6 +34,9 @@ class Application(Tk):
 
         self.fill_frames()
         self.show_page(frames.START_PAGE)
+
+        self.style = ttk.Style()
+        self.apply_styles()
 
     @property
     def credentials(self):
@@ -107,3 +110,13 @@ class Application(Tk):
         self.set_users_wh()
 
         self.show_page(frames.LoadedDataPage)
+
+    def apply_styles(self):
+        self.style.configure(
+            "Cell.TFrame",
+            borderwidth=1,
+            padding=15,
+            bordercolor="black",
+            relief="solid"
+        )
+        print(self.style.layout("Cell.TFrame"))
