@@ -1,8 +1,8 @@
 from UI.widgets import Label, Button, Frame
-from components.components import Table, TotalRow, InfoRow
+from components.components import TotalRow, InfoRow, GeneralInfo
 from tkinter import messagebox, LEFT
 from frames.page import Page
-from utils.utils import DEFAULT_ORDER, WORD_EXP_HEADERS
+from utils.utils import DEFAULT_ORDER
 
 
 class LoadedDataPage(Page):
@@ -10,19 +10,25 @@ class LoadedDataPage(Page):
         super().__init__(parent, controller)
 
         Label(self, text="Дані по QC")
-        self.table = Table(master=self, controller=self.controller, data_attr="users_wh", headings_attr="wh_headings")
+        frm_left = Frame(self)
+        frm_left.grid(row=0, column=0)
+        self.table = GeneralInfo(frm_left, self.controller,
+                                 data_attr="users_wh", labels=self.controller.wh_headings)
         self.table.pack()
 
-        self.total = TotalRow(self, self.controller,
+        frm_right = Frame(self)
+        frm_right.grid(row=0, column=1)
+
+        self.total = TotalRow(frm_right, self.controller,
                               data_attr="users_wh", labels=DEFAULT_ORDER)
         self.total.pack()
 
-        self.info = InfoRow(self, self.controller,
-                            data_attr="clean_data", labels=WORD_EXP_HEADERS)
+        self.info = InfoRow(frm_right, self.controller,
+                            data_attr="clean_data", labels=self.controller.wh_headings)
         self.info.pack()
 
         btn_frame = Frame(self)
-        btn_frame.pack()
+        btn_frame.grid(row=1, column=0, columnspan=2)
         Button(btn_frame, text="Заповнити все", command=self.fill_all).pack(side=LEFT)
         Button(
             btn_frame,

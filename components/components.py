@@ -126,3 +126,11 @@ class InfoRow(BaseTable):
             150000
         ]]
 
+
+class GeneralInfo(BaseTable):
+    def get_content(self):
+        return "\n".join(["\t".join([str(col) for col in row]) for row in self.data])
+
+    def prepare_data(self):
+        return self.data
+

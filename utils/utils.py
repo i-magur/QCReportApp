@@ -1,7 +1,6 @@
 import re
 
 DEFAULT_ORDER = ["Iryna", "Oleg", "Mariia",	"Lilia", "Uliana", "Anna"]
-WORD_EXP_HEADERS = ["Слова", "Таски", "Очікування"]
 USER = 13
 WORDCOUNT = 8
 
