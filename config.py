@@ -53,3 +53,6 @@ ICON_PATH = "icon.ico"
 TITLE = "QC Report App"
 
 BASE_SHEET = get_value("BASE_SHEET", "")
+INTERNAL_SHEET = get_value("INTERNAL_SHEET", "")
+FAILURES_SHEET = get_value("FAILURES_SHEET", "")
+HAND_OFF_SHEET = get_value("HAND_OFF_SHEET", "")

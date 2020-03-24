@@ -1,5 +1,3 @@
-from tkinter import LEFT
-
 from UI.widgets import Frame, Label, Select
 from components.base import BaseTable, BaseComponent
 from utils.utils import WORDCOUNT, FAULT_IDX, FAULT_INDEXES, HAND_OFF_IDX, HAND_OFF_INDEXES, DEFAULT_ORDER, \
@@ -91,13 +89,29 @@ class FailuresTab(BaseComponent):
 class ConfigTab(BaseComponent):
     def render(self):
         super().render()
-        Label(self, text="Coming soon...").pack()
+        frm1 = Frame(self)
+        frm2 = Frame(self)
+        frm3 = Frame(self)
+        frm1.pack()
+        frm2.pack()
+        frm3.pack()
+
+        Label(frm1, text="QC Engineers wordcount and project").pack()
+        SheetSelect(frm1, self.controller, "INTERNAL_SHEET", True).pack()
+
+        Label(frm2, text="Main report").pack()
+        SheetSelect(frm2, self.controller, "FAILURES_SHEET", True).pack()
+
+        Label(frm3, text="HandOff report").pack()
+        SheetSelect(frm3, self.controller, "HAND_OFF_SHEET", True).pack()
 
 
 class SheetSelect(BaseComponent):
-    def __init__(self, master=None, controller=None, sheet_name='', **kwargs):
+    def __init__(self, master=None, controller=None, sheet_name='',
+                 handle_change=False, **kwargs):
         self.sheet_name = sheet_name
         self.select = None
+        self.handle_change = handle_change
         super().__init__(master, controller, **kwargs)
 
     @property
@@ -114,6 +128,11 @@ class SheetSelect(BaseComponent):
         except AttributeError:
             return ''
 
+    def change_handler(self, e):
+        self.controller.save_sheet(
+            self.sheet_name, self.select.get()
+        )
+
     def get(self, *args, **kwargs):
         return self.select.get(*args, **kwargs)
 
@@ -124,5 +143,9 @@ class SheetSelect(BaseComponent):
             state="readonly",
             values=self.options
         )
-        self.select.set(self.selected_sheet)
+        if self.selected_sheet:
+            self.select.set(self.selected_sheet)
+        if self.handle_change:
+            self.select.bind('<<ComboboxSelected>>', self.change_handler)
+
         self.select.pack()
