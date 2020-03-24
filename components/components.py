@@ -1,7 +1,10 @@
 from tkinter import LEFT
 
+from gspread.utils import a1_to_rowcol, rowcol_to_a1
+
 from UI.widgets import Frame, Label, Select, Button
 from components.base import BaseTable, BaseComponent
+from errors import CellIsNotBlank
 from utils.utils import WORDCOUNT, FAULT_IDX, FAULT_INDEXES, HAND_OFF_IDX, HAND_OFF_INDEXES, DEFAULT_ORDER, \
     FAULT_LABELS, HAND_OFF_LABELS
 
@@ -26,12 +29,11 @@ class InfoRow(BaseTable):
 
 
 class GeneralInfo(BaseTable):
+    fill_index = 'R2'
+    fill_table = "BASE_SHEET"
+
     def prepare_data(self):
         return self.data
-
-    def save(self):
-        print("Saving...")
-        self.message("Somethig happend...")
 
 
 class FailuresTable(BaseTable):

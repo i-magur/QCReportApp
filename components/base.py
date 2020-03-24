@@ -1,7 +1,10 @@
 from tkinter import messagebox
 
+from gspread.utils import a1_to_rowcol, rowcol_to_a1
+
 from UI.styles import TABLE_FONT
 from UI.widgets import Label, Frame
+from errors import CellIsNotBlank
 from utils.utils import bind_tree
 
 
@@ -102,6 +105,9 @@ class Cell(Frame):
 
 
 class BaseTable(BaseTableComponent):
+    fill_index = ''
+    fill_table = ''
+
     def __init__(self, *args, labels=None, prepend_date=False, **kwargs):
         self.prepend_date = prepend_date
         self.labels = labels or []
@@ -127,11 +133,50 @@ class BaseTable(BaseTableComponent):
             )
         return "\n".join(["\t".join([str(col) for col in row]) for row in self.prepare_data()])
 
-    def save(self):
-        self.message("In progress...")
+    def check_rows(self, cell_range, data):
+        for cell, cell_value in zip(cell_range, data):
+            if cell.value:
+                raise CellIsNotBlank()
+            else:
+                cell.value = cell_value
+        return cell_range
 
-    def message(self, message):
-        messagebox.showinfo("Message", message)
+    def get_fill_range(self, ridx, cidx):
+        return f"{self.fill_index}:{rowcol_to_a1(ridx, cidx)}"
+
+    def save(self):
+        if not self.fill_index or not self.fill_table:
+            return self.message("Is not implemented yet...", True)
+
+        table = self.controller.get_sheet(self.fill_table)
+        if not table:
+            return self.message("Table is not selected", True)
+
+        data = self.prepare_data()
+        if not len(data):
+            return self.message(f"There is no data to fill")
+
+        ridx, cidx = a1_to_rowcol(self.fill_index)
+        ridx += len(data) - 1
+        cidx += len(data[0]) - 1
+        cell_range = self.get_fill_range(ridx, cidx)
+
+        ws = self.controller.load_table(self.fill_table)
+        data_to_fill = [c for row in data for c in row]
+        cell_list = ws.range(cell_range)
+        try:
+            self.check_rows(cell_list, data_to_fill)
+        except CellIsNotBlank:
+            return self.message(f"Some cells in range {cell_range} are not blank", True)
+
+        ws.update_cells(cell_list)
+        self.message(f"Successfully filled {table}, {cell_range}")
+
+    def message(self, message, error=False):
+        if error:
+            messagebox.showerror("Error", message)
+        else:
+            messagebox.showinfo("Message", message)
 
     def prepare_data(self):
         return []

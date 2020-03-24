@@ -3,6 +3,7 @@ from tkinter import Tk, Frame, BOTH, TOP, messagebox, ttk
 
 import gspread
 from gspread import Client, WorksheetNotFound
+from gspread.exceptions import APIError
 
 import config
 import frames
@@ -123,6 +124,14 @@ class Application(Tk):
         self.set_users_wh()
 
         self.show_page(frames.LoadedDataPage)
+
+    def load_table(self, name, worksheet=None):
+        name = self.get_sheet(name)
+        try:
+            return self.gc.open(name).worksheet(worksheet or self.get_worksheet())
+        except APIError:
+            messagebox.showerror("Error", "Google connection problem")
+            return None
 
     def apply_styles(self):
         for name, style in STYLES.items():
