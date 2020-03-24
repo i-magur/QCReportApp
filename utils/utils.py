@@ -79,3 +79,7 @@ def bind_tree(widget, event, callback, add=''):
     widget.bind(event, callback, add)
     for child in widget.children.values():
         bind_tree(child, event, callback, add)
+
+
+def fill_info(ws, data):
+    pass

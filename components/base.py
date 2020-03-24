@@ -127,6 +127,12 @@ class BaseTable(BaseTableComponent):
             )
         return "\n".join(["\t".join([str(col) for col in row]) for row in self.prepare_data()])
 
+    def save(self):
+        self.message("In progress...")
+
+    def message(self, message):
+        messagebox.showinfo("Message", message)
+
     def prepare_data(self):
         return []
 

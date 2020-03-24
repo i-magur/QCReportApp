@@ -1,4 +1,6 @@
-from UI.widgets import Frame, Label, Select
+from tkinter import LEFT
+
+from UI.widgets import Frame, Label, Select, Button
 from components.base import BaseTable, BaseComponent
 from utils.utils import WORDCOUNT, FAULT_IDX, FAULT_INDEXES, HAND_OFF_IDX, HAND_OFF_INDEXES, DEFAULT_ORDER, \
     FAULT_LABELS, HAND_OFF_LABELS
@@ -26,6 +28,10 @@ class InfoRow(BaseTable):
 class GeneralInfo(BaseTable):
     def prepare_data(self):
         return self.data
+
+    def save(self):
+        print("Saving...")
+        self.message("Somethig happend...")
 
 
 class FailuresTable(BaseTable):
@@ -57,9 +63,9 @@ class GeneralTab(BaseComponent):
         super().render()
         frm_left = Frame(self)
         frm_left.grid(row=1, column=1)
-        table = GeneralInfo(frm_left, self.controller,
-                            data_attr="users_wh", labels=self.controller.wh_headings)
-        table.pack()
+        general = GeneralInfo(frm_left, self.controller,
+                              data_attr="users_wh", labels=self.controller.wh_headings)
+        general.pack()
 
         frm_right = Frame(self)
         frm_right.grid(row=1, column=2)
@@ -72,6 +78,15 @@ class GeneralTab(BaseComponent):
         total.pack()
         projects.pack()
         info.pack()
+        frm_bottom = Frame(self)
+        frm_bottom.grid(row=2, column=1, columnspan=2)
+        Button(frm_bottom, text="Save First", command=self.save(general)).pack(side=LEFT)
+        Button(frm_bottom, text="Save 2", command=self.save(total)).pack(side=LEFT)
+        Button(frm_bottom, text="Save 3", command=self.save(projects)).pack(side=LEFT)
+        Button(frm_bottom, text="Save 3", command=self.save(info)).pack(side=LEFT)
+
+    def save(self, table):
+        return lambda: table.save()
 
 
 class FailuresTab(BaseComponent):
