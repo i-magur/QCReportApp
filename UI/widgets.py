@@ -39,3 +39,7 @@ class Select(ttk.Combobox):
 
 class Treeview(ttk.Treeview):
     pass
+
+
+class Notebook(ttk.Notebook):
+    pass

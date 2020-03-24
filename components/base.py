@@ -1,5 +1,4 @@
-from tkinter import messagebox, GROOVE
-from tkinter.ttk import Style
+from tkinter import messagebox
 
 from UI.styles import TABLE_FONT
 from UI.widgets import Label, Frame
@@ -20,6 +19,31 @@ def copy_text(comp, content):
 
 
 class BaseComponent(Frame):
+    def __init__(self, master=None, controller=None, **kwargs):
+        super(BaseComponent, self).__init__(master, **kwargs)
+        self.controller = controller or master
+        self.render()
+
+    @property
+    def date(self):
+        try:
+            return self.controller.date
+        except AttributeError:
+            return None
+
+    @property
+    def format_date(self):
+        try:
+            return self.controller.format_date()
+        except AttributeError:
+            return None
+
+    def render(self):
+        for f in self.winfo_children():
+            f.destroy()
+
+
+class BaseTableComponent(Frame):
     def __init__(self, master=None, controller=None, data_attr='', date_attr='date', **kwargs):
         super().__init__(master, **kwargs)
         self.controller = controller or master
@@ -73,7 +97,7 @@ class Cell(Frame):
         super(Cell, self).grid(ipadx=5, ipady=2, sticky="nsew", **kwargs)
 
 
-class BaseTable(BaseComponent):
+class BaseTable(BaseTableComponent):
     def __init__(self, *args, labels=None, prepend_date=False, **kwargs):
         self.prepend_date = prepend_date
         self.labels = labels or []
