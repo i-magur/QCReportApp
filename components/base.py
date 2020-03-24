@@ -107,24 +107,30 @@ class Cell(Frame):
 class BaseTable(BaseTableComponent):
     _fill_index = ''
     _fill_table = ''
+    _worksheet = None
+    _find_range = ''
+    skip_first = False
 
     def __init__(self, *args, labels=None, prepend_date=False, **kwargs):
         self.prepend_date = prepend_date
         self.labels = labels or []
         super().__init__(*args, **kwargs)
 
-    @property
-    def fill_index(self):
-        return self._fill_index or self.find_index()
+    def find_index(self, ws):
+        val = self.controller.format_date()
+        return self.find_in_range(ws, self._find_range, val)
+
+    def find_in_range(self, ws, cell_range, val):
+        for cell in ws.range(cell_range):
+            if cell.value == val:
+                return rowcol_to_a1(cell.row, cell.col)
+        return ''
 
     @property
     def fill_table(self):
-        return self._fill_table or self.fill_table()
+        return self._fill_table or self.find_table()
 
     def find_table(self):
-        return ''
-
-    def find_index(self):
         return ''
 
     def pack(self, *args, **kwargs):
@@ -148,18 +154,20 @@ class BaseTable(BaseTableComponent):
         return "\n".join(["\t".join([str(col) for col in row]) for row in self.prepare_data()])
 
     def check_rows(self, cell_range, data):
+        start = True
         for cell, cell_value in zip(cell_range, data):
-            if cell.value:
+            if cell.value and (not self.skip_first or not start):
                 raise CellIsNotBlank()
             else:
                 cell.value = cell_value
+            start = False
         return cell_range
 
-    def get_fill_range(self, ridx, cidx):
-        return f"{self.fill_index}:{rowcol_to_a1(ridx, cidx)}"
+    def get_fill_range(self, fill_index, ridx, cidx):
+        return f"{fill_index}:{rowcol_to_a1(ridx, cidx)}"
 
     def save(self):
-        if not self.fill_index or not self.fill_table:
+        if not self.fill_table:
             return self.message("Is not implemented yet...", True)
 
         table = self.controller.get_sheet(self.fill_table)
@@ -169,13 +177,18 @@ class BaseTable(BaseTableComponent):
         data = self.prepare_data()
         if not len(data):
             return self.message(f"There is no data to fill")
+        if self.prepend_date:
+            data = list(map(self.add_date, data))
+        ws = self.controller.load_table(self.fill_table, self._worksheet)
+        fill_index = self._fill_index or self.find_index(ws)
+        if not fill_index:
+            return self.message("Cannot find place to fill", True)
 
-        ridx, cidx = a1_to_rowcol(self.fill_index)
+        ridx, cidx = a1_to_rowcol(fill_index)
         ridx += len(data) - 1
         cidx += len(data[0]) - 1
-        cell_range = self.get_fill_range(ridx, cidx)
+        cell_range = self.get_fill_range(fill_index, ridx, cidx)
 
-        ws = self.controller.load_table(self.fill_table)
         data_to_fill = [c for row in data for c in row]
         cell_list = ws.range(cell_range)
         try:

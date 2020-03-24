@@ -1,3 +1,4 @@
+from datetime import datetime
 from tkinter import LEFT
 
 from UI.widgets import Frame, Label, Select, Button
@@ -7,16 +8,31 @@ from utils.utils import WORDCOUNT, FAULT_IDX, FAULT_INDEXES, HAND_OFF_IDX, HAND_
 
 
 class WordCountTable(BaseTable):
+    _fill_table = 'INTERNAL_SHEET'
+    _worksheet = datetime.now().strftime("%B")
+    _find_range = 'A2:A27'
+    skip_first = True
+
     def prepare_data(self):
         return [[row[1] for row in self.data]]
 
 
 class ProjectsCountTable(BaseTable):
+    _fill_table = 'INTERNAL_SHEET'
+    _worksheet = datetime.now().strftime("%B")
+    _find_range = 'A26:A50'
+    skip_first = True
+
     def prepare_data(self):
         return [[row[2] for row in self.data]]
 
 
 class InfoRow(BaseTable):
+    _fill_table = 'INTERNAL_SHEET'
+    _worksheet = datetime.now().strftime("%B")
+    _find_range = 'K2:K27'
+    skip_first = True
+
     def prepare_data(self):
         return [[
             sum(map(int, [i[WORDCOUNT] for i in self.data])),
@@ -79,10 +95,10 @@ class GeneralTab(BaseComponent):
         info.pack()
         frm_bottom = Frame(self)
         frm_bottom.grid(row=2, column=1, columnspan=2)
-        Button(frm_bottom, text="Save First", command=self.save(general)).pack(side=LEFT)
-        Button(frm_bottom, text="Save 2", command=self.save(total)).pack(side=LEFT)
-        Button(frm_bottom, text="Save 3", command=self.save(projects)).pack(side=LEFT)
-        Button(frm_bottom, text="Save 3", command=self.save(info)).pack(side=LEFT)
+        Button(frm_bottom, text="Save General", command=self.save(general)).pack(side=LEFT, padx=20)
+        Button(frm_bottom, text="Save Daily WordCount", command=self.save(total)).pack(side=LEFT)
+        Button(frm_bottom, text="Save Daily ProjectsCount", command=self.save(projects)).pack(side=LEFT)
+        Button(frm_bottom, text="Save Daily Stats", command=self.save(info)).pack(side=LEFT)
 
     def save(self, table):
         return lambda: table.save()

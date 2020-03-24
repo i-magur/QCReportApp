@@ -78,7 +78,7 @@ class Application(Tk):
             self.date = date.today()
 
     def format_date(self):
-        return self.date.strftime("%m/%d/%y")
+        return self.date.strftime("%#m/%#d/%Y")
 
     def get_sheet(self, name):
         return getattr(self.config, name, None)
