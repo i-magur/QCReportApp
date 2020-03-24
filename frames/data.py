@@ -1,15 +1,12 @@
 from UI.widgets import Label, Button, Frame, Notebook
-from components.components import WordCountTable, InfoRow, GeneralInfo, ProjectsCountTable, FailuresTable, HandOffTable, \
-    GeneralTab, FailuresTab, ConfigTab
+from components.components import GeneralTab, FailuresTab, ConfigTab
 from tkinter import messagebox, LEFT
 from frames.page import Page
-from utils.utils import DEFAULT_ORDER, FAULT_LABELS, HAND_OFF_LABELS
 
 
 class LoadedDataPage(Page):
     def __init__(self, parent, controller):
         super().__init__(parent, controller)
-        # Label(self, text="Дані по QC").grid(padx=5, pady=5, row=0, column=0, columnspan=2)
         Label(self, text="Дані по QC").pack(padx=5, pady=5)
 
         self.notebook = Notebook(self)
