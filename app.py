@@ -18,6 +18,7 @@ class Application(Tk):
         self.iconbitmap(self.config.ICON_PATH)
         self.title(self.config.TITLE)
         self.sheet = None
+        self.worksheet_list = []
         self.sheet_list = []
         self._credentials = None
         self._gc = None
@@ -70,7 +71,10 @@ class Application(Tk):
         callable(cb) and cb()
 
     def save_date(self, day):
-        self.date = date.today().replace(day=int(day))
+        try:
+            self.date = date.today().replace(day=int(day))
+        except ValueError:
+            self.date = date.today()
 
     def format_date(self):
         return self.date.strftime("%m/%d/%y")
@@ -94,15 +98,22 @@ class Application(Tk):
         messagebox.showerror("Не знайдено",
                              f"Вибрана таблиця не має вкладки {self.date.day}")
 
-    def load_data(self):
+    def load_data(self, force=False):
+        if force or not self.sheet:
+            self.sheet = self.gc.open(self.get_sheet("BASE_SHEET"))
+        self.set_worksheet_list()
+
+    def set_worksheet_list(self):
+        if self.sheet:
+            self.worksheet_list = [s.title for s in self.sheet.worksheets()]
+
+    def show_data(self):
         if not self.get_sheet("BASE_SHEET"):
             messagebox.showerror(
                 "Не вибрана основна таблиця",
                 "Будьласка вибери основну таблицю"
             )
             return None
-
-        self.sheet = self.gc.open(self.get_sheet("BASE_SHEET"))
 
         try:
             self.loaded_data = self.sheet.worksheet(self.get_worksheet())

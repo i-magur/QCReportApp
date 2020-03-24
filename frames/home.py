@@ -20,12 +20,12 @@ class HomePage(Page):
             frame2,
             state="readonly",
             width=3,
-            values=list(range(1, date.today().day + 1))
+            values=self.worksheet_list
         )
         self.day_input.set(self.controller.date.day)
         self.day_input.bind(
             '<<ComboboxSelected>>',
-            lambda e: self.controller.save_date(self.day_input.get())
+            self.day_change_callback
         )
         self.sheet_input = Entry(frame2, textvar=self.sheet_name, state=DISABLED)
         self.update_widget_name()
@@ -40,11 +40,26 @@ class HomePage(Page):
 
         frame3 = Frame(self)
         frame3.pack()
-        load_data = Button(frame3, text="Завантажити дані", command=self.controller.load_data)
+        load_data = Button(frame3, text="Завантажити дані", command=self.controller.show_data)
         load_data.pack()
+
+    def day_change_callback(self, e):
+        self.controller.save_date(self.day_input.get())
 
     def update_widget_name(self):
         self.sheet_name.set(self.controller.get_sheet("BASE_SHEET"))
+
+    def update_day_select(self):
+        self.day_input['values'] = self.worksheet_list
+        val = self.controller.date.day \
+            if str(self.controller.date.day) in self.worksheet_list \
+            else self.worksheet_list[-1]
+        self.day_input.set(val)
+        self.day_change_callback(None)
+
+    @property
+    def worksheet_list(self):
+        return self.controller.worksheet_list or list(range(1, date.today().day + 1))
 
     def select_sheet(self):
         self.window = Toplevel(self)
@@ -70,7 +85,12 @@ class HomePage(Page):
 
     def select_sheet_callback(self):
         self.update_widget_name()
+        self.controller.load_data(True)
+        self.update_day_select()
         self.window and self.window.destroy()
 
     def on_mount(self):
         self.controller.load_sheet_list()
+        if self.sheet_name:
+            self.controller.load_data()
+            self.update_day_select()
