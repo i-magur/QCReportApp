@@ -105,13 +105,27 @@ class Cell(Frame):
 
 
 class BaseTable(BaseTableComponent):
-    fill_index = ''
-    fill_table = ''
+    _fill_index = ''
+    _fill_table = ''
 
     def __init__(self, *args, labels=None, prepend_date=False, **kwargs):
         self.prepend_date = prepend_date
         self.labels = labels or []
         super().__init__(*args, **kwargs)
+
+    @property
+    def fill_index(self):
+        return self._fill_index or self.find_index()
+
+    @property
+    def fill_table(self):
+        return self._fill_table or self.fill_table()
+
+    def find_table(self):
+        return ''
+
+    def find_index(self):
+        return ''
 
     def pack(self, *args, **kwargs):
         super().pack(*args, padx=0, pady=0, **kwargs)
