@@ -1,6 +1,6 @@
 from tkinter import LEFT
 
-from UI.widgets import Frame, Label
+from UI.widgets import Frame, Label, Select
 from components.base import BaseTable, BaseComponent
 from utils.utils import WORDCOUNT, FAULT_IDX, FAULT_INDEXES, HAND_OFF_IDX, HAND_OFF_INDEXES, DEFAULT_ORDER, \
     FAULT_LABELS, HAND_OFF_LABELS
@@ -92,3 +92,37 @@ class ConfigTab(BaseComponent):
     def render(self):
         super().render()
         Label(self, text="Coming soon...").pack()
+
+
+class SheetSelect(BaseComponent):
+    def __init__(self, master=None, controller=None, sheet_name='', **kwargs):
+        self.sheet_name = sheet_name
+        self.select = None
+        super().__init__(master, controller, **kwargs)
+
+    @property
+    def options(self):
+        try:
+            return self.controller.sheet_list
+        except AttributeError:
+            return []
+
+    @property
+    def selected_sheet(self):
+        try:
+            return self.controller.get_sheet(self.sheet_name)
+        except AttributeError:
+            return ''
+
+    def get(self, *args, **kwargs):
+        return self.select.get(*args, **kwargs)
+
+    def render(self):
+        super(SheetSelect, self).render()
+        self.select = Select(
+            self,
+            state="readonly",
+            values=self.options
+        )
+        self.select.set(self.selected_sheet)
+        self.select.pack()

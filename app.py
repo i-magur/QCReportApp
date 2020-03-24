@@ -18,6 +18,7 @@ class Application(Tk):
         self.iconbitmap(self.config.ICON_PATH)
         self.title(self.config.TITLE)
         self.sheet = None
+        self.sheet_list = []
         self._credentials = None
         self._gc = None
         self.loaded_data = None
@@ -118,3 +119,6 @@ class Application(Tk):
                 name,
                 **style
             )
+
+    def load_sheet_list(self):
+        self.sheet_list = [s['name'] for s in self.gc.list_spreadsheet_files()]

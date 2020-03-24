@@ -1,13 +1,15 @@
 from datetime import date
-from tkinter import LEFT, DISABLED, Toplevel, NORMAL, StringVar
+from tkinter import LEFT, DISABLED, Toplevel, StringVar
 
 from UI.widgets import Label, Button, Frame, Entry, Select
+from components.components import SheetSelect
 from frames.page import Page
 
 
 class HomePage(Page):
     def __init__(self, parent, controller):
         super().__init__(parent, controller)
+
         self.window = None
         self.sheet_name = StringVar(value=self.controller.get_sheet("BASE_SHEET"))
         frame1 = Frame(self)
@@ -54,12 +56,7 @@ class HomePage(Page):
 
         frame2 = Frame(self.window)
         frame2.pack()
-        select = Select(
-            frame2,
-            state="readonly",
-            values=self.get_values()
-        )
-        select.set(self.controller.get_sheet("BASE_SHEET"))
+        select = SheetSelect(frame2, self.controller, "BASE_SHEET")
         select.pack()
 
         frame3 = Frame(self.window)
@@ -75,6 +72,5 @@ class HomePage(Page):
         self.update_widget_name()
         self.window and self.window.destroy()
 
-    def get_values(self):
-        gc = self.controller.gc
-        return [s['name'] for s in gc.list_spreadsheet_files()]
+    def on_mount(self):
+        self.controller.load_sheet_list()
