@@ -1,6 +1,6 @@
 from UI.widgets import Label, Button, Frame, Notebook
 from components.components import WordCountTable, InfoRow, GeneralInfo, ProjectsCountTable, FailuresTable, HandOffTable, \
-    GeneralTab, FailuresTab
+    GeneralTab, FailuresTab, ConfigTab
 from tkinter import messagebox, LEFT
 from frames.page import Page
 from utils.utils import DEFAULT_ORDER, FAULT_LABELS, HAND_OFF_LABELS
@@ -15,11 +15,14 @@ class LoadedDataPage(Page):
         self.notebook = Notebook(self)
         self.notebook.pack(pady=5, padx=5)
 
-        self.tab_general = GeneralTab(self.notebook, self.controller)
-        self.notebook.add(self.tab_general, text="General")
+        tab_general = GeneralTab(self.notebook, self.controller)
+        self.notebook.add(tab_general, text="General")
 
-        self.failures = FailuresTab(self.notebook, self.controller)
-        self.notebook.add(self.failures, text="Failures")
+        failures = FailuresTab(self.notebook, self.controller)
+        self.notebook.add(failures, text="Failures")
+
+        config = ConfigTab(self.notebook, self.controller)
+        self.notebook.add(config, text="Configuration")
 
         btn_frame = Frame(self)
         btn_frame.pack()

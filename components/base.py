@@ -22,6 +22,7 @@ class BaseComponent(Frame):
     def __init__(self, master=None, controller=None, **kwargs):
         super(BaseComponent, self).__init__(master, **kwargs)
         self.controller = controller or master
+        self.pre_render()
         self.render()
 
     @property
@@ -37,6 +38,9 @@ class BaseComponent(Frame):
             return self.controller.format_date()
         except AttributeError:
             return None
+
+    def pre_render(self):
+        pass
 
     def render(self):
         for f in self.winfo_children():

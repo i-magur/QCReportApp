@@ -1,6 +1,6 @@
 from tkinter import LEFT
 
-from UI.widgets import Frame
+from UI.widgets import Frame, Label
 from components.base import BaseTable, BaseComponent
 from utils.utils import WORDCOUNT, FAULT_IDX, FAULT_INDEXES, HAND_OFF_IDX, HAND_OFF_INDEXES, DEFAULT_ORDER, \
     FAULT_LABELS, HAND_OFF_LABELS
@@ -49,16 +49,22 @@ class HandOffTable(BaseTable):
 
 
 class GeneralTab(BaseComponent):
+    def pre_render(self):
+        for w, c in zip([0, 1, 1, 0], range(4)):
+            self.grid_columnconfigure(c, weight=w)
+        for w, r in zip([0, 1, 0], range(3)):
+            self.grid_rowconfigure(r, weight=w)
+
     def render(self):
         super().render()
         frm_left = Frame(self)
-        frm_left.pack(side=LEFT)
+        frm_left.grid(row=1, column=1)
         table = GeneralInfo(frm_left, self.controller,
                             data_attr="users_wh", labels=self.controller.wh_headings)
         table.pack()
 
         frm_right = Frame(self)
-        frm_right.pack()
+        frm_right.grid(row=1, column=2)
         total = WordCountTable(frm_right, self.controller, prepend_date=True,
                                data_attr="users_wh", labels=DEFAULT_ORDER)
         projects = ProjectsCountTable(frm_right, self.controller, prepend_date=True,
@@ -80,3 +86,9 @@ class FailuresTab(BaseComponent):
         handoff = HandOffTable(self, self.controller, prepend_date=True,
                                data_attr='clean_data', labels=HAND_OFF_LABELS)
         handoff.pack()
+
+
+class ConfigTab(BaseComponent):
+    def render(self):
+        super().render()
+        Label(self, text="Coming soon...").pack()
