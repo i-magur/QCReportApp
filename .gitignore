@@ -5,3 +5,4 @@ credentials2.json
 build
 token.pickle
 config.json
+__pycache__
