@@ -12,10 +12,16 @@ class HomePage(Page):
 
         self.window = None
         self.sheet_name = StringVar(value=self.controller.get_sheet("BASE_SHEET"))
-        frame1 = Frame(self)
+        for i, weight in zip(range(3), [0, 1, 0]):
+            self.grid_rowconfigure(i, weight=weight)
+            self.grid_columnconfigure(i, weight=weight)
+        div = Frame(self)
+        div.grid(row=1, column=1, padx=0, pady=0)
+
+        frame1 = Frame(div)
         label = Label(frame1, text="Вибрана таблиця і день")
 
-        frame2 = Frame(self)
+        frame2 = Frame(div)
         self.day_input = Select(
             frame2,
             state="readonly",
@@ -27,7 +33,7 @@ class HomePage(Page):
             '<<ComboboxSelected>>',
             self.day_change_callback
         )
-        self.sheet_input = Entry(frame2, textvar=self.sheet_name, state=DISABLED)
+        self.sheet_input = Entry(frame2, width=30, textvar=self.sheet_name, state=DISABLED)
         self.update_widget_name()
         self.update_btn = Button(frame2, text="Змінити", command=self.select_sheet)
 
@@ -38,7 +44,7 @@ class HomePage(Page):
         self.sheet_input.pack(side=LEFT, padx=10)
         self.update_btn.pack(side=LEFT)
 
-        frame3 = Frame(self)
+        frame3 = Frame(div)
         frame3.pack()
         load_data = Button(frame3, text="Завантажити дані", command=self.controller.show_data)
         load_data.pack()

@@ -17,6 +17,10 @@ class Button(ttk.Button):
 
 
 class Entry(ttk.Entry):
+    def __init__(self, *args, **kwargs):
+        kwargs['width'] = kwargs['width'] if kwargs.get('width', None) is not None else 30
+        super().__init__(*args, **kwargs)
+
     def pack(self, *args, **kwargs):
         super(Entry, self).pack(*args, **{"padx": 5, **kwargs})
 
@@ -34,7 +38,9 @@ class FrameSmall(ttk.Frame):
 
 
 class Select(ttk.Combobox):
-    pass
+    def __init__(self, *args, **kwargs):
+        kwargs['width'] = kwargs['width'] if kwargs.get('width', None) is not None else 30
+        super().__init__(*args, **kwargs)
 
 
 class Treeview(ttk.Treeview):
