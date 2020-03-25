@@ -1,4 +1,5 @@
 import re
+from datetime import datetime
 
 DEFAULT_ORDER = ["Iryna", "Oleg", "Mariia", "Lilia", "Uliana", "Anna"]
 DEFAULT_LABELS = [
@@ -22,12 +23,12 @@ DEFAULT_LABELS = [
 
 FAULT_INDEXES = list(range(11)) + [14]
 FAULT_IDX = 13
-FAULT_LABELS = (DEFAULT_LABELS[idx] for idx in FAULT_INDEXES)
+FAULT_LABELS = [DEFAULT_LABELS[idx] for idx in FAULT_INDEXES]
 
 HAND_OFF_INDEXES = list(range(10)) + [11, 10, 12]
 HAND_OFF_SHORT = list(range(5)) + [8, 9, 11, 10, 12]
 HAND_OFF_IDX = 12
-HAND_OFF_LABELS = (DEFAULT_LABELS[idx] for idx in HAND_OFF_INDEXES)
+HAND_OFF_LABELS = [DEFAULT_LABELS[idx] for idx in HAND_OFF_INDEXES]
 
 
 USER = 13
@@ -81,5 +82,16 @@ def bind_tree(widget, event, callback, add=''):
         bind_tree(child, event, callback, add)
 
 
-def fill_info(ws, data):
-    pass
+def find_a_place_to_fill(ws, current_date, date_format):
+    values = ws.col_values(1)
+    for ridx, date_cell in enumerate(values, 1):
+        try:
+            date = datetime.strptime(date_cell, date_format.replace('#', '')).date()
+            if date > current_date:
+                return ridx
+            if date == current_date:
+                return ''
+        except ValueError:
+            continue
+
+    return len(values) + 1

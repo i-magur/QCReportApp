@@ -6,7 +6,7 @@ from gspread.utils import rowcol_to_a1
 from UI.widgets import Frame, Label, Select, Button
 from components.base import BaseTable, BaseComponent
 from utils.utils import WORDCOUNT, FAULT_IDX, FAULT_INDEXES, HAND_OFF_IDX, HAND_OFF_INDEXES, DEFAULT_ORDER, \
-    FAULT_LABELS, HAND_OFF_LABELS
+    FAULT_LABELS, HAND_OFF_LABELS, find_a_place_to_fill
 
 
 class WordCountTable(BaseTable):
@@ -57,19 +57,7 @@ class FailuresTable(BaseTable):
     _insert = True
 
     def find_index(self, ws):
-        current_date = self.controller.date
-        values = ws.col_values(1)
-        for ridx, date_cell in enumerate(values, 1):
-            try:
-                date = datetime.strptime(date_cell, self.controller.date_format.replace('#', '')).date()
-                if date > current_date:
-                    return ridx
-                if date == current_date:
-                    return ''
-            except ValueError:
-                continue
-
-        return len(values) + 1
+        return find_a_place_to_fill(ws, self.controller.date, self.controller.date_format)
 
     def prepare_data(self):
         data = []
@@ -80,6 +68,13 @@ class FailuresTable(BaseTable):
 
 
 class HandOffTable(BaseTable):
+    _fill_table = 'HAND_OFF_SHEET'
+    _worksheet = 'Sheet1'
+    _insert = True
+
+    def find_index(self, ws):
+        return find_a_place_to_fill(ws, self.controller.date, self.controller.date_format)
+
     def prepare_data(self):
         data = []
         for row in self.data:
