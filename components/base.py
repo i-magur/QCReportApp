@@ -190,7 +190,7 @@ class BaseTable(BaseTableComponent):
         if self._insert:
             cell_range = fill_index
             for row in data:
-                retry_fn(lambda: ws.insert_row(row, index=fill_index))
+                retry_fn(lambda: ws.insert_row(row, index=fill_index, value_input_option='USER_ENTERED'))
 
         else:
             ridx, cidx = a1_to_rowcol(fill_index)
