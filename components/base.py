@@ -111,6 +111,8 @@ class BaseTable(BaseTableComponent):
     _find_range = ''
     skip_first = False
     _insert = False
+    MAX_ROWS = 6
+    label = None
 
     def __init__(self, *args, labels=None, prepend_date=False, **kwargs):
         self.prepend_date = prepend_date
@@ -224,19 +226,34 @@ class BaseTable(BaseTableComponent):
         frm.pack(padx=0, pady=0)
         frm.grid_rowconfigure(0, weight=1)
         frm.grid_columnconfigure(0, weight=1)
+
+        title = None
+        if self.label:
+            title = Label(self, text=self.label)
+            title.pack()
         if not pd:
-            # TODO: Pack blank data
+            if title:
+                title['text'] = f"{title['text']} - Немає данних"
+            else:
+                Label(self, text='Немає данних').pack()
             return None
 
         if self.prepend_date:
             Cell(frm, "Date", thead=True).grid(row=0, column=0)
             for ridx in range(1, len(pd)+1):
+                if ridx > self.MAX_ROWS:
+                    break
                 Cell(frm, self.format_date).grid(row=ridx, column=0)
 
-        for idx, name in enumerate(self.labels, 1):
+        for idx, name in enumerate(self.labels, int(self.prepend_date)):
             Cell(frm, name, thead=True).grid(row=0, column=idx)
         for ridx, row in enumerate(pd, 1):
-            for cidx, col in enumerate(row, 1):
+            if ridx > self.MAX_ROWS:
+                break
+            for cidx, col in enumerate(row, int(self.prepend_date)):
                 Cell(frm, col).grid(row=ridx, column=cidx)
+        if (row_count := len(pd)) > self.MAX_ROWS:
+            for cidx in range(len(pd[0]) + int(self.prepend_date)):
+                Cell(frm, '...').grid(row=row_count + 1, column=cidx)
 
         bind_tree(frm, "<Button-1>", self.copy_text)

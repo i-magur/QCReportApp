@@ -1,8 +1,6 @@
 from datetime import datetime
 from tkinter import LEFT
 
-from gspread.utils import rowcol_to_a1
-
 from UI.widgets import Frame, Label, Select, Button
 from components.base import BaseTable, BaseComponent
 from utils.utils import WORDCOUNT, FAULT_IDX, FAULT_INDEXES, HAND_OFF_IDX, HAND_OFF_INDEXES, DEFAULT_ORDER, \
@@ -14,6 +12,7 @@ class WordCountTable(BaseTable):
     _worksheet = datetime.now().strftime("%B")
     _find_range = 'A2:A27'
     skip_first = True
+    label = "Word Count"
 
     def prepare_data(self):
         return [[row[1] for row in self.data]]
@@ -24,6 +23,7 @@ class ProjectsCountTable(BaseTable):
     _worksheet = datetime.now().strftime("%B")
     _find_range = 'A26:A50'
     skip_first = True
+    label = "Projects count"
 
     def prepare_data(self):
         return [[row[2] for row in self.data]]
@@ -34,6 +34,7 @@ class InfoRow(BaseTable):
     _worksheet = datetime.now().strftime("%B")
     _find_range = 'K2:K27'
     skip_first = True
+    label = "Info"
 
     def prepare_data(self):
         return [[
@@ -46,6 +47,7 @@ class InfoRow(BaseTable):
 class GeneralInfo(BaseTable):
     _fill_index = 'R2'
     _fill_table = "BASE_SHEET"
+    label = 'General'
 
     def prepare_data(self):
         return self.data
@@ -55,6 +57,7 @@ class FailuresTable(BaseTable):
     _fill_table = 'FAILURES_SHEET'
     _worksheet = 'Sheet1'
     _insert = True
+    label = "Failures"
 
     def find_index(self, ws):
         return find_a_place_to_fill(ws, self.controller.date, self.controller.date_format)
@@ -71,6 +74,7 @@ class HandOffTable(BaseTable):
     _fill_table = 'HAND_OFF_SHEET'
     _worksheet = 'Sheet1'
     _insert = True
+    label = "Handoff time"
 
     def find_index(self, ws):
         return find_a_place_to_fill(ws, self.controller.date, self.controller.date_format)
