@@ -32,7 +32,7 @@ class ProjectsCountTable(BaseTable):
 class InfoRow(BaseTable):
     _fill_table = 'INTERNAL_SHEET'
     _worksheet = datetime.now().strftime("%B")
-    _find_range = 'K2:K27'
+    _find_range = 'I2:I27'
     skip_first = True
     label = "Info"
 
