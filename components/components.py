@@ -1,6 +1,8 @@
 from datetime import datetime
 from tkinter import LEFT
 
+from gspread.utils import rowcol_to_a1
+
 from UI.widgets import Frame, Label, Select, Button
 from components.base import BaseTable, BaseComponent
 from utils.utils import WORDCOUNT, FAULT_IDX, FAULT_INDEXES, HAND_OFF_IDX, HAND_OFF_INDEXES, DEFAULT_ORDER, \
@@ -50,6 +52,25 @@ class GeneralInfo(BaseTable):
 
 
 class FailuresTable(BaseTable):
+    _fill_table = 'FAILURES_SHEET'
+    _worksheet = 'Sheet1'
+    _insert = True
+
+    def find_index(self, ws):
+        current_date = self.controller.date
+        values = ws.col_values(1)
+        for ridx, date_cell in enumerate(values, 1):
+            try:
+                date = datetime.strptime(date_cell, self.controller.date_format.replace('#', '')).date()
+                if date > current_date:
+                    return ridx
+                if date == current_date:
+                    return ''
+            except ValueError:
+                continue
+
+        return len(values) + 1
+
     def prepare_data(self):
         data = []
         for row in self.data:
@@ -114,6 +135,14 @@ class FailuresTab(BaseComponent):
         handoff = HandOffTable(self, self.controller, prepend_date=True,
                                data_attr='clean_data', labels=HAND_OFF_LABELS)
         handoff.pack()
+
+        frm_bottom = Frame(self)
+        frm_bottom.pack()
+        Button(frm_bottom, text="Save Failures", command=self.save(fails)).pack(side=LEFT)
+        Button(frm_bottom, text="Save Handoff", command=self.save(handoff)).pack(side=LEFT)
+
+    def save(self, table):
+        return lambda: table.save()
 
 
 class ConfigTab(BaseComponent):

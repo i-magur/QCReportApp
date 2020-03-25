@@ -18,6 +18,7 @@ class Application(Tk):
         self.config = config
         self.iconbitmap(self.config.ICON_PATH)
         self.title(self.config.TITLE)
+        self.date_format = "%#m/%#d/%Y"
         self.sheet = None
         self.worksheet_list = []
         self.sheet_list = []
@@ -78,7 +79,7 @@ class Application(Tk):
             self.date = date.today()
 
     def format_date(self):
-        return self.date.strftime("%#m/%#d/%Y")
+        return self.date.strftime(self.date_format)
 
     def get_sheet(self, name):
         return getattr(self.config, name, None)

@@ -110,6 +110,7 @@ class BaseTable(BaseTableComponent):
     _worksheet = None
     _find_range = ''
     skip_first = False
+    _insert = False
 
     def __init__(self, *args, labels=None, prepend_date=False, **kwargs):
         self.prepend_date = prepend_date
@@ -184,19 +185,25 @@ class BaseTable(BaseTableComponent):
         if not fill_index:
             return self.message("Cannot find place to fill", True)
 
-        ridx, cidx = a1_to_rowcol(fill_index)
-        ridx += len(data) - 1
-        cidx += len(data[0]) - 1
-        cell_range = self.get_fill_range(fill_index, ridx, cidx)
+        if self._insert:
+            cell_range = fill_index
+            for row in data:
+                ws.insert_row(row, index=fill_index)
+        else:
+            ridx, cidx = a1_to_rowcol(fill_index)
+            ridx += len(data) - 1
+            cidx += len(data[0]) - 1
+            cell_range = self.get_fill_range(fill_index, ridx, cidx)
+            cell_list = ws.range(cell_range)
+            data_to_fill = [c for row in data for c in row]
 
-        data_to_fill = [c for row in data for c in row]
-        cell_list = ws.range(cell_range)
-        try:
-            self.check_rows(cell_list, data_to_fill)
-        except CellIsNotBlank:
-            return self.message(f"Some cells in range {cell_range} are not blank", True)
+            try:
+                self.check_rows(cell_list, data_to_fill)
+            except CellIsNotBlank:
+                return self.message(f"Some cells in range {cell_range} are not blank", True)
 
-        ws.update_cells(cell_list)
+            ws.update_cells(cell_list)
+
         self.message(f"Successfully filled {table}, {cell_range}")
 
     def message(self, message, error=False):
