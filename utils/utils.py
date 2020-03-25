@@ -1,5 +1,8 @@
 import re
 from datetime import datetime
+import time
+
+from gspread.exceptions import APIError
 
 DEFAULT_ORDER = ["Iryna", "Oleg", "Mariia", "Lilia", "Uliana", "Anna"]
 DEFAULT_LABELS = [
@@ -95,3 +98,15 @@ def find_a_place_to_fill(ws, current_date, date_format):
             continue
 
     return len(values) + 1
+
+
+def retry_fn(fn):
+    while 1:
+        try:
+            fn()
+            break
+        except APIError as e:
+            if e.response.status_code == 429:
+                time.sleep(5)
+            else:
+                raise e

@@ -1,6 +1,6 @@
 from UI.widgets import Label, Button, Frame, Notebook
 from components.components import GeneralTab, FailuresTab, ConfigTab
-from tkinter import messagebox, LEFT
+from tkinter import LEFT
 from frames.page import Page
 
 
@@ -12,11 +12,11 @@ class LoadedDataPage(Page):
         self.notebook = Notebook(self)
         self.notebook.pack(pady=5, padx=5)
 
-        tab_general = GeneralTab(self.notebook, self.controller)
-        self.notebook.add(tab_general, text="General")
+        self.tab_general = GeneralTab(self.notebook, self.controller)
+        self.notebook.add(self.tab_general, text="General")
 
-        failures = FailuresTab(self.notebook, self.controller)
-        self.notebook.add(failures, text="Failures")
+        self.failures = FailuresTab(self.notebook, self.controller)
+        self.notebook.add(self.failures, text="Failures")
 
         config = ConfigTab(self.notebook, self.controller)
         self.notebook.add(config, text="Configuration")
@@ -31,7 +31,8 @@ class LoadedDataPage(Page):
         ).pack(side=LEFT, padx=10, pady=10)
 
     def fill_all(self):
-        messagebox.showinfo("Скоро буде!", "Рано ще. Там багато умов :)")
+        for frame in [self.tab_general, self.failures]:
+            frame.save_all()
 
     def tkraise(self, aboveThis=None):
         super(LoadedDataPage, self).tkraise(aboveThis)

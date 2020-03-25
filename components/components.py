@@ -88,6 +88,8 @@ class HandOffTable(BaseTable):
 
 
 class GeneralTab(BaseComponent):
+    tables = []
+
     def pre_render(self):
         for w, c in zip([0, 1, 1, 0], range(4)):
             self.grid_columnconfigure(c, weight=w)
@@ -119,12 +121,19 @@ class GeneralTab(BaseComponent):
         Button(frm_bottom, text="Save Daily WordCount", command=self.save(total)).pack(side=LEFT)
         Button(frm_bottom, text="Save Daily ProjectsCount", command=self.save(projects)).pack(side=LEFT)
         Button(frm_bottom, text="Save Daily Stats", command=self.save(info)).pack(side=LEFT)
+        self.tables = [general, total, projects, info]
 
     def save(self, table):
         return lambda: table.save()
 
+    def save_all(self):
+        for f in self.tables:
+            self.save(f)()
+
 
 class FailuresTab(BaseComponent):
+    tables = []
+
     def render(self):
         super().render()
 
@@ -139,9 +148,14 @@ class FailuresTab(BaseComponent):
         frm_bottom.pack()
         Button(frm_bottom, text="Save Failures", command=self.save(fails)).pack(side=LEFT)
         Button(frm_bottom, text="Save Handoff", command=self.save(handoff)).pack(side=LEFT)
+        self.tables = [fails, handoff]
 
     def save(self, table):
         return lambda: table.save()
+
+    def save_all(self):
+        for f in self.tables:
+            self.save(f)()
 
 
 class ConfigTab(BaseComponent):

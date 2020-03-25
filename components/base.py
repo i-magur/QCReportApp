@@ -5,7 +5,7 @@ from gspread.utils import a1_to_rowcol, rowcol_to_a1
 from UI.styles import TABLE_FONT
 from UI.widgets import Label, Frame
 from errors import CellIsNotBlank
-from utils.utils import bind_tree
+from utils.utils import bind_tree, retry_fn
 
 
 def copy_text(comp, content):
@@ -190,7 +190,8 @@ class BaseTable(BaseTableComponent):
         if self._insert:
             cell_range = fill_index
             for row in data:
-                ws.insert_row(row, index=fill_index)
+                retry_fn(lambda: ws.insert_row(row, index=fill_index))
+
         else:
             ridx, cidx = a1_to_rowcol(fill_index)
             ridx += len(data) - 1
