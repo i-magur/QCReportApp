@@ -1,8 +1,9 @@
 import json
+import os
 
-
-VERSION = '1.1'
+VERSION = '1.2'
 NAME = "QCReportApp"
+TITLE = "QC Report App"
 DESCRIPTION = "QC Report Helper Application"
 
 
@@ -32,6 +33,7 @@ def set_value(name, value):
     with open(CONFIG_PATH, "r") as f:
         data = json.load(f)
     data[name] = value
+    FILE_CONFIG[name] = value
     with open(CONFIG_PATH, "w") as f:
         json.dump(data, f)
 
@@ -43,20 +45,17 @@ SCOPES = [
     'https://www.googleapis.com/auth/drive'
 ]
 
-# BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+USER_DIR = os.path.expanduser('~')
+BASE_PATH = os.path.join(USER_DIR, 'Documents', NAME)
+if not os.path.exists(BASE_PATH):
+    os.mkdir(BASE_PATH)
 
-# TOKEN_PATH = os.path.join(BASE_DIR, 'token.pickle')
-# CREDENTIALS_PATH = os.path.join(BASE_DIR, "credentials.json")
-#
-# ICON_PATH = os.path.join(BASE_DIR, "icon.ico")
+CONFIG_PATH = os.path.join(BASE_PATH, "config.json")
+TOKEN_PATH = os.path.join(BASE_PATH, 'token.pickle')
 
-TOKEN_PATH = 'token.pickle'
 CREDENTIALS_PATH = "credentials.json"
-
-CONFIG_PATH = "config.json"
 ICON_PATH = "icon.ico"
 
-TITLE = "QC Report App"
 
 BASE_SHEET = get_value("BASE_SHEET", "")
 INTERNAL_SHEET = get_value("INTERNAL_SHEET", "")
