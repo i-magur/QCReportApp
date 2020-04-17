@@ -32,7 +32,7 @@ bdist_msi_options = {
     'initial_target_dir': f'[ProgramFilesFolder]\\{config.NAME}',
     'all_users': True,
     'install_icon': config.ICON_PATH,
-    'upgrade_code': '{96e1b49d-40e8-4edc-8547-ceb4a9c0a619}',
+    'upgrade_code': '{024df4d9-a635-450d-85fd-dbee72922830}',
 }
 
 buildOptions = dict(packages=[], includes=[], excludes=[], include_files=files)
