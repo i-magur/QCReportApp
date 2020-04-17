@@ -1,5 +1,11 @@
 import json
 
+
+VERSION = '1.1'
+NAME = "QCReportApp"
+DESCRIPTION = "QC Report Helper Application"
+
+
 FILE_CONFIG = dict()
 
 
