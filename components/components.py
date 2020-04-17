@@ -1,7 +1,7 @@
 from datetime import datetime
 from tkinter import LEFT
 
-from UI.widgets import Frame, Label, Select, Button
+from UI.widgets import Frame, Label, Select, Button, InputSelect
 from components.base import BaseTable, BaseComponent
 from utils.utils import WORDCOUNT, FAULT_IDX, FAULT_INDEXES, HAND_OFF_IDX, HAND_OFF_INDEXES, DEFAULT_ORDER, \
     FAULT_LABELS, HAND_OFF_LABELS, find_a_place_to_fill
@@ -210,14 +210,13 @@ class SheetSelect(BaseComponent):
 
     def render(self):
         super(SheetSelect, self).render()
-        self.select = Select(
+        self.select = InputSelect(
             self,
-            state="readonly",
+            width=50,
+            on_change=self.change_handler,
             values=self.options
         )
         if self.selected_sheet:
             self.select.set(self.selected_sheet)
-        if self.handle_change:
-            self.select.bind('<<ComboboxSelected>>', self.change_handler)
 
         self.select.pack()
