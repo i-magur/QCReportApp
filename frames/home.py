@@ -33,6 +33,16 @@ class HomePage(Page):
             '<<ComboboxSelected>>',
             self.day_change_callback
         )
+
+        self.month_input = Select(
+            frame2, state="readonly", width=10,
+            values=self.controller.config.MONTH_NAMES
+        )
+        self.month_input.set(self.controller.date.strftime("%B"))
+        self.day_input.bind(
+            '<<ComboboxSelected>>',
+            self.month_change_callback
+        )
         self.sheet_input = Entry(frame2, width=30, textvar=self.sheet_name, state=DISABLED)
         self.update_widget_name()
         self.update_btn = Button(frame2, text="Змінити", command=self.select_sheet)
@@ -41,6 +51,7 @@ class HomePage(Page):
         label.pack()
         frame2.pack()
         self.day_input.pack(side=LEFT)
+        self.month_input.pack(side=LEFT, padx=(10, 0))
         self.sheet_input.pack(side=LEFT, padx=10)
         self.update_btn.pack(side=LEFT)
 
@@ -50,7 +61,10 @@ class HomePage(Page):
         load_data.pack()
 
     def day_change_callback(self, e):
-        self.controller.save_date(self.day_input.get())
+        self.controller.save_date(day=self.day_input.get())
+
+    def month_change_callback(self, e):
+        self.controller.save_date(month=self.month_input.get())
 
     def update_widget_name(self):
         self.sheet_name.set(self.controller.get_sheet("BASE_SHEET"))

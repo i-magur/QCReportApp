@@ -1,5 +1,6 @@
 import json
 import os
+from datetime import date
 
 VERSION = '1.2'
 NAME = "QCReportApp"
@@ -36,6 +37,10 @@ def set_value(name, value):
     FILE_CONFIG[name] = value
     with open(CONFIG_PATH, "w") as f:
         json.dump(data, f)
+
+
+today = date.today()
+MONTH_NAMES = [today.replace(month=i).strftime('%B') for i in range(1, 13)]
 
 
 SCOPES = [

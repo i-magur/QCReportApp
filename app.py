@@ -72,9 +72,12 @@ class Application(Tk):
         setattr(self.config, name, value)
         callable(cb) and cb()
 
-    def save_date(self, day):
+    def save_date(self, day=None, month=None):
         try:
-            self.date = date.today().replace(day=int(day))
+            if day:
+                self.date = self.date.replace(day=int(day))
+            if month:
+                self.date = self.date.replace(month=self.config.MONTH_NAMES.index(month) + 1)
         except ValueError:
             self.date = date.today()
 
