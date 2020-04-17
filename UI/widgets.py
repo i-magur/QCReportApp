@@ -49,3 +49,42 @@ class Treeview(ttk.Treeview):
 
 class Notebook(ttk.Notebook):
     pass
+
+
+DEL_CODES = [8, 46]
+
+
+class InputSelect(ttk.Combobox):
+    def __init__(self, master=None, values=None, on_change=None, on_keyup=None, **kwargs):
+        self.options = values or []
+        self.on_change = on_change
+        self.on_keyup = on_keyup
+        super().__init__(master, values=values, **kwargs)
+
+        self.bind('<<ComboboxSelected>>', self.handle_change)
+        self.bind('<KeyRelease>', self.handle_keyup)
+        self.prev_val = self.get() or ''
+
+    def handle_change(self, e=None):
+        if self.on_change:
+            return self.on_change(self.get())
+
+    def handle_keyup(self, e=None):
+        if not e.char and e.keycode not in DEL_CODES:
+            return
+        if self.on_keyup:
+            return self.on_keyup(self.get())
+        val = self.get() or ''
+        new_vals = [v for v in self.options if str(v).lower().startswith(val.lower())]
+        if len(new_vals) == 1 and e.char:
+            self.set(new_vals[0])
+            self.prev_val = new_vals[0]
+        elif not new_vals and self.options:
+            if e.char:
+                self.set(self.prev_val)
+            new_vals = [v for v in self.options if str(v).lower().startswith(self.prev_val.lower())]
+        else:
+            self.prev_val = val
+        self['values'] = new_vals
+        if len(new_vals) == 1:
+            self.handle_change()
