@@ -2,7 +2,7 @@ import json
 import os
 from datetime import date
 
-VERSION = '1.2.1'
+VERSION = '1.2.2'
 NAME = "QCReportApp"
 TITLE = "QC Report App"
 DESCRIPTION = "QC Report Helper Application"
