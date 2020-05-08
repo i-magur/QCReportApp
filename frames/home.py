@@ -39,7 +39,7 @@ class HomePage(Page):
             values=self.controller.config.MONTH_NAMES
         )
         self.month_input.set(self.controller.date.strftime("%B"))
-        self.day_input.bind(
+        self.month_input.bind(
             '<<ComboboxSelected>>',
             self.month_change_callback
         )

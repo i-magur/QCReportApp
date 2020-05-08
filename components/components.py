@@ -9,10 +9,14 @@ from utils.utils import WORDCOUNT, FAULT_IDX, FAULT_INDEXES, HAND_OFF_IDX, HAND_
 
 class WordCountTable(BaseTable):
     _fill_table = 'INTERNAL_SHEET'
-    _worksheet = datetime.now().strftime("%B")
+    _worksheet = None
     _find_range = 'A2:A27'
     skip_first = True
     label = "Word Count"
+
+    def __init__(self, *args, **kwargs):
+        super(WordCountTable, self).__init__(*args, **kwargs)
+        self._worksheet = self.controller.date.strftime('%B')
 
     def prepare_data(self):
         return [[row[1] for row in self.data]]

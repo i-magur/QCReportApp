@@ -136,6 +136,9 @@ class Application(Tk):
         except APIError:
             messagebox.showerror("Error", "Google connection problem")
             return None
+        except WorksheetNotFound as e:
+            messagebox.showerror("Error", f"Не знайдена вкладка {str(e)}")
+            return None
 
     def apply_styles(self):
         for name, style in STYLES.items():
