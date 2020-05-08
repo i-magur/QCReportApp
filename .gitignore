@@ -3,6 +3,7 @@ venv/
 credentials.json
 credentials2.json
 build
+dist
 .vscode
 token.pickle
 config.json
