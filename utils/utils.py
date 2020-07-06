@@ -41,7 +41,7 @@ WORDCOUNT = 8
 def get_clean_data(raw_data):
     if not raw_data:
         return None
-    return [row for row in raw_data[1:] if row[0]]
+    return [row for row in raw_data[1:] if row[0] and str(row[0]).strip()]
 
 
 def collect_users_wh(clean_data):
